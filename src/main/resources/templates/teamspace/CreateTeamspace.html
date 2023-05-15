@@ -19,12 +19,12 @@
     function acceptApply(user_id, post_id){
       sessionStorage.setItem('apply_user_id', user_id);
       sessionStorage.setItem('apply_post_id', post_id);
-      window.location.href =  "http://localhost:8080/AcceptApply";
+      window.location.href =  "http://27.96.135.23:8080/AcceptApply";
     }
     function denyApply(user_id, post_id){
       sessionStorage.setItem('apply_user_id', user_id);
       sessionStorage.setItem('apply_post_id', post_id);
-      window.location.href =  "http://localhost:8080/DenyApply";
+      window.location.href =  "http://27.96.135.23:8080/DenyApply";
     }
     function openModal(post_id) {
         document.getElementById("modal").style.display = "block";
