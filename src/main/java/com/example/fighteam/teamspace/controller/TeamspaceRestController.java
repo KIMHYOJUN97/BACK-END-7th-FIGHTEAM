@@ -67,15 +67,15 @@ public class TeamspaceRestController {
     public String TeamspaceErrorManager(@RequestParam("error_code") String error_code){
         String url="";
         if(error_code.equals("nl")){//need login
-            url = "<script>alert('로그인이 필요한 서비스입니다.');location.href='http://localhost:8080/user/login';</script>";
+            url = "<script>alert('로그인이 필요한 서비스입니다.');location.href='http://27.96.135.23:8080/user/login';</script>";
         }else if(error_code.equals("nm")){//not member
-            url = "<script>alert('해당 팀의 멤버가 아닙니다.');window.location.href='http://localhost:8080/post/home';</script>";
+            url = "<script>alert('해당 팀의 멤버가 아닙니다.');window.location.href='http://27.96.135.23:8080/post/home';</script>";
         }else if(error_code.equals("nmst")){//not master
-            url = "<script>alert('해당 팀의 마스터권한이 필요한 서비스입니다.');window.location.href='http://localhost:8080/post/home';</script>";
+            url = "<script>alert('해당 팀의 마스터권한이 필요한 서비스입니다.');window.location.href='http://27.96.135.23:8080/post/home';</script>";
         }else if(error_code.equals("et")){//exist teamspace
-            url = "<script>alert('이미 생성된 팀스페이스 입니다.');window.location.href='http://localhost:8080/myPageTeamspace';</script>";
+            url = "<script>alert('이미 생성된 팀스페이스 입니다.');window.location.href='http://27.96.135.23:8080/myPageTeamspace';</script>";
         }else if(error_code.equals("ns")){//need sub master
-            url = "<script>alert('서브마스터를 지정해 주세요.');window.location.href='http://localhost:8080/myPageTeamspace';</script>";
+            url = "<script>alert('서브마스터를 지정해 주세요.');window.location.href='http://27.96.135.23:8080/myPageTeamspace';</script>";
         }
         return url;
     }
