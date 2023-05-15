@@ -5,6 +5,8 @@ import com.example.fighteam.post.domain.dto.*;
 import java.util.List;
 
 public interface PostRepository {
+    String findUsernameByPostId(Long post_id);
+
     Long insertproject(CreatePostDto createPostDto);
     Boolean removepost(Long post_id);
 

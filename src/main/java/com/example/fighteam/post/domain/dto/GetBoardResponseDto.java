@@ -19,6 +19,7 @@ public class GetBoardResponseDto {
     private int count;
     private String subject;
     private int deposit;
+    private String name;
 
 
 }

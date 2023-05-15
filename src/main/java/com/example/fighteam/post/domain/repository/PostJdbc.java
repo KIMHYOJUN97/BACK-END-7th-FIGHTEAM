@@ -25,6 +25,27 @@ public class PostJdbc implements PostRepository {
     private Statement stmt;
 
     @Override
+    public String findUsernameByPostId(Long post_id) {
+        String result = null;
+        String sql = "select distinct(name) from users u inner join post_table " +
+                "p on u.user_id = p.user_id where p.post_id = ?";
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setLong(1,post_id);
+            rs = pstmt.executeQuery();
+            if (rs.next()){
+                result = rs.getString("name");
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally {
+            close(conn, pstmt, rs);
+        }
+        return result;
+    }
+
+    @Override
     public Long insertproject(CreatePostDto createPostDto) {
         String sql = "insert into post_table(user_id, title, content, startdate, enddate, " +
                 "recruitdate, deposit, count, complete,subject, date) values (?,?,?,?,?,?,?,?,?,?, now())";
@@ -155,7 +176,8 @@ public class PostJdbc implements PostRepository {
 
     @Override
     public List<GetBoardResponseDto> findPostByUserID(Long id) {
-        String sql = "select * from post_table where user_id = ?";
+        String sql = "select u.name, p.* from post_table p inner join " +
+                "users u on p.user_id = u.user_id where p.user_id = ?";
         List<GetBoardResponseDto> g = new ArrayList<>();
         try{
             conn = dataSource.getConnection();
@@ -171,6 +193,7 @@ public class PostJdbc implements PostRepository {
                 getBoardResponseDto.setCount(rs.getInt("count"));
                 getBoardResponseDto.setSubject(rs.getString("subject"));
                 getBoardResponseDto.setDeposit(rs.getInt("deposit") / 10000);
+                getBoardResponseDto.setName(rs.getString("name"));
                 getBoardResponseDto.setLanguageContent("");
                 getBoardResponseDto.setTypeContent("");
                 g.add(getBoardResponseDto);

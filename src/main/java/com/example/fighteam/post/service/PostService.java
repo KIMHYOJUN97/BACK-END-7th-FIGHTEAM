@@ -31,6 +31,7 @@ public class PostService {
         for(GetBoardResponseDto g: getBoardResponseDto){
             List<String> language = postRepository.findlanguage(g.getPost_id());
             List<String> type = postRepository.findcontent(g.getPost_id());
+            g.setName(postRepository.findUsernameByPostId(g.getPost_id()));
             String lan = String.join(", ",language);
             String tp = String.join(", ",type);
             g.setLanguageContent(lan);
@@ -104,7 +105,6 @@ public class PostService {
 
     }
 
-
     public List<GetBoardResponseDto> findByLanguage(String topic, int page, String language) {
 
         List<GetBoardResponseDto> getBoardResponseDto = new ArrayList<>();
@@ -113,6 +113,7 @@ public class PostService {
         for(GetBoardResponseDto g: getBoardResponseDto){
             List<String> languages = postRepository.findlanguage(g.getPost_id());
             List<String> types = postRepository.findcontent(g.getPost_id());
+            g.setName(postRepository.findUsernameByPostId(g.getPost_id()));
             String lan = String.join(", ",languages);
             String tp = String.join(", ",types);
             g.setLanguageContent(lan);
