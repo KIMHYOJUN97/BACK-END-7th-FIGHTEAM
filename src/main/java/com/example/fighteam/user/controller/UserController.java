@@ -1,16 +1,29 @@
 package com.example.fighteam.user.controller;
 
+import com.example.fighteam.user.domain.dto.KaKaoProfile;
+import com.example.fighteam.user.domain.dto.OAuthToken;
 import com.example.fighteam.user.domain.repository.User;
 import com.example.fighteam.user.domain.repository.UserRepository;
 import com.example.fighteam.user.service.UserService;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
+import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
@@ -91,6 +104,36 @@ public class UserController {
         return "redirect:/post/home";
     }
 
+
+    //카카오 로그인 콜백 함수
+    @GetMapping("/user/kakao/callback")
+    public String kakaoCallback(String code, HttpSession session) throws JsonProcessingException {
+
+        OAuthToken oAuthToken = userService.getAccessTokenfromKakao(code);
+
+        System.out.println("카카오 엑세스 토큰:" + oAuthToken.getAccess_token());
+
+        KaKaoProfile kaKaoProfile = userService.getInfoFromKakao(oAuthToken);
+        System.out.println("카카오 아이디: " + kaKaoProfile.getId());
+        System.out.println("카카오 이메일: " + kaKaoProfile.getKakao_account().getEmail());
+        System.out.println("카카오 이름: " + kaKaoProfile.getKakao_account().getProfile().getNickname());
+
+        String name = kaKaoProfile.getKakao_account().getProfile().getNickname();
+        String email = kaKaoProfile.getKakao_account().getEmail();
+        String passwd = UUID.randomUUID().toString();
+        User user = new User();
+        user.setEmail(email);
+        user.setPasswd(passwd);
+        user.setName(name);
+        User dup = userRepository.findByEmail(email).orElse(null);
+        if(dup == null){
+            userService.signUp(user);
+        }
+        User user2 = userService.loginUserId(email);
+        System.out.println("userId"+user.getId());
+        session.setAttribute("loginId", user2.getId());
+        return "redirect:/post/home";
+    }
 
 }
 
